@@ -2,18 +2,25 @@ import { defineStore } from 'pinia'
 
 export const useBeliefStore = defineStore('belief', {
   state: () => ({
-    counter: 11
+    user: {
+      logged_in: false,
+      name: null,
+      cookie: null
+    },
+    // counter: 11
   }),
 
   getters: {
-    doubleCount (state) {
-      return state.counter * 2
-    }
+    // doubleCount (state) {
+    //   return state.counter * 2
+    // }
   },
 
   actions: {
-    increment () {
-      this.counter++
-    }
+    set_user(name, cookie){
+      this.user.logged_in = true
+      this.user.name = name
+      this.user.cookie = cookie
+    },
   }
 })

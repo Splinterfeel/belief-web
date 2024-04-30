@@ -1,34 +1,65 @@
 <template>
-  <q-page class="flex flex-center">
-    <img
-      alt="Quasar logo"
-      src="~assets/quasar-logo-vertical.svg"
-      style="width: 200px; height: 200px"
-    >
-    {{ store.doubleCount }}
+  <q-page>
+    <q-card class="fixed-center" style="width: 50vh; height: 15vw">
+      <div class="q-gutter-lg" style="padding: 3vh">
+        <q-input filled type="text" label="Логин" v-model="login" />
+        <q-input filled type="password" label="Пароь" v-model="password" />
+        <q-btn color="primary" label="Войти" @click="auth" :disable="!login||!password" />
+        <q-btn color="secondary" label="Регистрация" @click="register " :disable="!login||!password" />
+      </div>
+    </q-card>
   </q-page>
 </template>
 
 <script>
 import { defineComponent, ref } from 'vue'
-import { useBeliefStore } from 'stores/belief';
-import { storeToRefs } from 'pinia';
+import { useBeliefStore } from 'stores/belief'
+import { storeToRefs } from 'pinia'
+import { api } from 'boot/axios'
+import { Notify } from 'quasar'
 
-export default {
-  setup() {
-    const store = useBeliefStore();
+const store = useBeliefStore()
+
+export default defineComponent({
+  name: 'IndexPage',
+  components: {
+  },
+  data() {
     return {
-      store
-    }
+      login: null,
+      password: null,
+    };
+  },
+  mounted: function(){
+  },
+  computed: {
   },
   methods: {
-    test(){
-      console.log('test')
-      this.store.increment()
+    auth(){
+      api.post('/common/auth', {login: this.login, password: this.password})
+      .then((resp)=>{
+        console.log(resp.data)
+        if (resp.data.successful){
+          store.set_user(resp.data.user.login, resp.data.user.cookie)
+          Notify.create({message: 'Логин успешен!'})
+        }
+        else {
+          Notify.create({message: 'Неверный логин или пароль!'})
+        }
+      })
+    },
+    register(){
+      api.post('/common/user', {login: this.login, password: this.password})
+      .then((resp)=>{
+        console.log(resp.data)
+        if (resp.data == true){
+          Notify.create({message: 'Пользователь успешно зарегистрирован!'})
+        }
+        else {
+          Notify.create({message: 'Ошибка. Возможно, такой логин уже существует?'})
+        }
+      })
     }
   },
-  mounted() {
-    this.test()
-  }
-}
+})
 </script>
