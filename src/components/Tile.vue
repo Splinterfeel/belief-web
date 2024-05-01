@@ -42,10 +42,11 @@
   height: 100px;
 }
 .filled_tile {
-  background-color: rgb(229, 241, 174);
+  background-color: rgb(160, 210, 155);
+  cursor: pointer;
 }
 .empty_tile {
-  background-color: rgb(160, 210, 155);
+  background-color: rgb(229, 241, 174);
   width: 100%;
   height: 100%;
 }

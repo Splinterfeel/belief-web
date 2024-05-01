@@ -46,7 +46,7 @@ export default defineComponent({
         console.log(resp.data)
         if (resp.data.successful){
           store.set_user(resp.data.user.login, resp.data.user.cookie)
-          Notify.create({message: 'Логин успешен!'})
+          this.$router.push('/main')
         }
         else {
           Notify.create({message: 'Неверный логин или пароль!'})

@@ -1,8 +1,12 @@
 import { defineStore } from 'pinia'
 
-const user_name = localStorage.getItem('user.name')
-const user_cookie = localStorage.getItem('user.cookie')
-const user_logged_in = user_name && user_cookie
+const user_name = localStorage.getItem('user.name') || null
+const user_cookie = localStorage.getItem('user.cookie') || null
+
+let user_logged_in = false
+if ((user_name !== null) && (user_cookie !== null) && (user_name !== 'null') && (user_cookie !== 'null')){
+  user_logged_in = true
+}
 
 export const useBeliefStore = defineStore('belief', {
   state: () => ({
@@ -21,6 +25,13 @@ export const useBeliefStore = defineStore('belief', {
   },
 
   actions: {
+    logout(){
+      localStorage.setItem('user.name', null)
+      localStorage.setItem('user.cookie', null)
+      this.user.logged_in = false
+      this.user.name = null
+      this.user.cookie = null
+    },
     set_user(name, cookie){
       localStorage.setItem('user.name', name)
       localStorage.setItem('user.cookie', cookie)

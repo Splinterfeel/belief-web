@@ -31,22 +31,15 @@ export default route(function (/* { store, ssrContext } */) {
 
   Router.beforeEach((to, from, next)=>{
     if (to.path === '/'){
-      console.log('default path /, going')
       next();
     }
     else if (store.user.logged_in === false && to.path !== '/'){
-      console.log('not logged in, going to /')
       next('/');
     }
     else {
+      console.log(store.user.logged_in)
       next();
     }
-    // else {
-    //   next({
-    //     path: 'login',
-    //     replace: true
-    //   })
-    // }
   })
 
   return Router
