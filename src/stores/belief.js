@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { api } from 'boot/axios'
 
 const user_name = localStorage.getItem('user.name') || null
 const user_cookie = localStorage.getItem('user.cookie') || null
@@ -38,6 +39,9 @@ export const useBeliefStore = defineStore('belief', {
       this.user.logged_in = true
       this.user.name = name
       this.user.cookie = cookie
+      console.log(api.cookie)
+      // api.cookie('user_cookie', this.user.cookie)
+      api.defaults.headers.common['user_cookie'] = this.user.cookie
     },
   }
 })
