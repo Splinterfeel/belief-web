@@ -37,7 +37,6 @@ export default route(function (/* { store, ssrContext } */) {
       next('/');
     }
     else {
-      console.log(store.user.logged_in)
       next();
     }
   })

@@ -43,7 +43,6 @@ export default defineComponent({
     auth(){
       api.post('/common/auth', {login: this.login, password: this.password})
       .then((resp)=>{
-        console.log(resp.data)
         if (resp.data.successful){
           store.set_user(resp.data.user.login, resp.data.user.cookie)
           this.$router.push('/main')
@@ -56,7 +55,6 @@ export default defineComponent({
     register(){
       api.post('/common/user', {login: this.login, password: this.password})
       .then((resp)=>{
-        console.log(resp.data)
         if (resp.data == true){
           Notify.create({message: 'Пользователь успешно зарегистрирован!'})
         }
