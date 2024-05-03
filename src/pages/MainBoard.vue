@@ -1,12 +1,26 @@
 <template>
   <q-page>
     <div class="row">
-      <div class="col" style="border: 3px solid black">left col</div>
-      <div class="board col">
-        <Tile v-for="i in cells" :icon="i" @click="tile_click(i)" />
+      <div class="col">
+        <!-- left col -->
+        <q-card class="left_card">
+          <q-select :options="user_strongholds" label="Крепость"
+          option-value="id" option-label="name" v-model="selected_stronghold.select_model"
+          @update:model-value="get_stronghold(selected_stronghold.select_model.id)" />
+        </q-card>
       </div>
-      
-      <div class="col" style="border: 3px solid black">right col</div>
+      <div class="col">
+        <div class="board" v-if="selected_stronghold.data.buildings.length">
+          <Tile v-for="i in selected_stronghold.data.buildings" :icon="i" @click="tile_click(i)" />
+        </div>
+        <div v-else class="board">Выберите крепость</div>
+      </div>
+      <div class="col">
+        <!-- right col -->
+        <q-card class="right_card">
+123
+        </q-card>
+      </div>
     </div>
   </q-page>
 </template>
@@ -26,19 +40,32 @@ export default defineComponent({
   components: { Tile,  },
   data() {
     return {
-      cells: [
-        null, 'castle', null, 'barracks', null,
-        null, null, null, null, 'residence',
-        null, null, null, 'shooting_range', null,
-        null, 'church', null, null, null,
-        null, null, null, null, null],
+      user_strongholds: [],
+      selected_stronghold: {
+        select_model: null,
+        data: {
+          buildings: []
+        },
+      },
     };
   },
   mounted: function(){
+    store.get_user_strongholds(store.user.id).then((resp)=>{
+      this.user_strongholds = resp
+    })
+    // this.user_strongholds = store.get_user_strongholds(store.user.id).th
+    
   },
   computed: {
   },
   methods: {
+    get_stronghold(id){
+      store.get_stronghold(id).then((resp)=>{
+        this.selected_stronghold.data = resp
+        console.log(this.selected_stronghold)
+      })
+      console.log('get str '+id)
+    },
     tile_click(index){
       console.log('clicked '+index)
     }
@@ -47,9 +74,21 @@ export default defineComponent({
 </script>
 <style>
 .board {
-  margin: 10px;
+  margin-top: 1vh;
   display: flex;
   flex-wrap: wrap;
   width: 505px;
+  height: 505px;
+}
+.left_card {
+  padding: 1vh;
+  margin-right: 2vh;
+  height: 515px;
+}
+.right_card {
+  padding: 1vh;
+  margin-left: 1vh;
+  padding-left: 2vh;
+  height: 515px;
 }
 </style>

@@ -44,7 +44,7 @@ export default defineComponent({
       api.post('/common/auth', {login: this.login, password: this.password})
       .then((resp)=>{
         if (resp.data.successful){
-          store.set_user(resp.data.user.login, resp.data.user.cookie)
+          store.set_user(resp.data.user.id, resp.data.user.login, resp.data.user.cookie)
           this.$router.push('/main')
         }
         else {
