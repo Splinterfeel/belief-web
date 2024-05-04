@@ -54,8 +54,6 @@ export default defineComponent({
     store.get_user_strongholds(store.user.id).then((resp)=>{
       this.user_strongholds = resp
     })
-    // this.user_strongholds = store.get_user_strongholds(store.user.id).th
-    
   },
   computed: {
   },
@@ -65,7 +63,6 @@ export default defineComponent({
         this.selected_stronghold.data = resp
         console.log(this.selected_stronghold)
       })
-      console.log('get str '+id)
     },
     tile_click(building){
       console.log(building)

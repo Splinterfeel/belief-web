@@ -21,6 +21,12 @@ export const useBeliefStore = defineStore('belief', {
       name: user_name,
       cookie: user_cookie
     },
+    resources: {
+      food: 0,
+      materials: 0,
+      population: 0,
+      gold: 0
+    }
     // counter: 11
   }),
 
@@ -46,8 +52,6 @@ export const useBeliefStore = defineStore('belief', {
       this.user.id = id
       this.user.name = name
       this.user.cookie = cookie
-      console.log(api.cookie)
-      // api.cookie('user_cookie', this.user.cookie)
       api.defaults.headers.common['user_cookie'] = this.user.cookie
     },
     async get_user_strongholds(user_id){
@@ -57,6 +61,10 @@ export const useBeliefStore = defineStore('belief', {
     async get_stronghold(id){
       let resp = await api.get('/strongholds/?id='+id)
       return resp.data
+    },
+    async get_user_resources(){
+      let resp = await api.get('/common/resources/?user_id='+this.user.id)
+      this.resources = resp.data
     }
   }
 })
