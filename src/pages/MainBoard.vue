@@ -11,7 +11,8 @@
       </div>
       <div class="col">
         <div class="board" v-if="selected_stronghold.data.buildings.length">
-          <Tile v-for="i in selected_stronghold.data.buildings" :icon="i" @click="tile_click(i)" />
+          <Tile v-for="building in selected_stronghold.data.buildings"
+            :type="building.building_type" @click="tile_click(building)" />
         </div>
         <div v-else class="board">Выберите крепость</div>
       </div>
@@ -66,8 +67,8 @@ export default defineComponent({
       })
       console.log('get str '+id)
     },
-    tile_click(index){
-      console.log('clicked '+index)
+    tile_click(building){
+      console.log(building)
     }
   },
 })

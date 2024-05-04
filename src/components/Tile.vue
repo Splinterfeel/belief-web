@@ -1,7 +1,8 @@
 <template>
     <div class="tile">
-      <q-img v-if="icon" class="filled_tile"
-        :src="'/src/assets/'+icon+'.png'" :alt="'/src/assets/'+icon+'.png'"/>
+      <q-img v-if="type" class="filled_tile"
+        :src="'/src/assets/'+type.icon_name+'.png'"
+        :alt="'/src/assets/'+type.icon_name+'.png'"/>
       <div v-else class="empty_tile"></div>
     </div>
 </template>
@@ -13,10 +14,10 @@
   export default defineComponent({
     name: 'Tile',
     props: {
-      icon: {
-        type: String,
+      type: {
+        type: Object,
         required: false,
-        default: ''
+        default: null
       },
     },
     components: {
