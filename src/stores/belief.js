@@ -55,7 +55,8 @@ export const useBeliefStore = defineStore('belief', {
       api.defaults.headers.common['user_cookie'] = this.user.cookie
     },
     async get_user_strongholds(user_id){
-      let resp = await api.get('/strongholds/user?user_id='+user_id)
+      let resp = await api.get('/strongholds/user?user_id='+user_id,
+        {withCredentials: true})
       return resp.data
     },
     async get_stronghold(id){
