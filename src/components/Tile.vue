@@ -3,7 +3,8 @@
       <q-img v-if="type" class="filled_tile"
         :src="'/src/assets/'+type.icon_name+'.png'"
         :alt="'/src/assets/'+type.icon_name+'.png'"/>
-      <div v-else class="empty_tile"></div>
+      <div v-else-if="queued_task" class="queued_building_tile" ></div>
+      <div v-else class="empty_tile" ></div>
     </div>
 </template>
   
@@ -15,6 +16,11 @@
     name: 'Tile',
     props: {
       type: {
+        type: Object,
+        required: false,
+        default: null
+      },
+      queued_task: {
         type: Object,
         required: false,
         default: null
@@ -48,6 +54,12 @@
 }
 .empty_tile {
   background-color: rgb(229, 241, 174);
+  width: 100%;
+  height: 100%;
+}
+.queued_building_tile {
+  background-color: rgb(160, 210, 155);
+  cursor: pointer;
   width: 100%;
   height: 100%;
 }

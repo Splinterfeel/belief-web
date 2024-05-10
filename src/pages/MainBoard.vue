@@ -12,7 +12,8 @@
       <div class="col">
         <div class="board" v-if="selected_stronghold.data.buildings.length">
           <Tile v-for="building in selected_stronghold.data.buildings"
-            :type="building.building_type" @click="tile_click(building)" />
+            :type="building.building_type" @click="tile_click(building)"
+            :queued_task="building.queued_task"/>
         </div>
         <div v-else class="board">Выберите крепость</div>
       </div>
@@ -61,7 +62,6 @@ export default defineComponent({
     get_stronghold(id){
       store.get_stronghold(id).then((resp)=>{
         this.selected_stronghold.data = resp
-        console.log(this.selected_stronghold)
       })
     },
     tile_click(building){
