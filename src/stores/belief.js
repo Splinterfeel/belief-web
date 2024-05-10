@@ -11,7 +11,9 @@ if (
       (user_name !== null) && (user_cookie !== null)
       && (user_name !== 'null') && (user_cookie !== 'null')){
   user_logged_in = true
+  api.defaults.headers.common['Authorization'] = user_cookie
 }
+api.defaults.withCredentials = true
 
 export const useBeliefStore = defineStore('belief', {
   state: () => ({
@@ -26,7 +28,7 @@ export const useBeliefStore = defineStore('belief', {
       materials: 0,
       population: 0,
       gold: 0
-    }
+    },
     // counter: 11
   }),
 
@@ -48,11 +50,11 @@ export const useBeliefStore = defineStore('belief', {
       localStorage.setItem('user.id', id)
       localStorage.setItem('user.name', name)
       localStorage.setItem('user.cookie', cookie)
+      api.defaults.headers.common['Authorization'] = cookie
       this.user.logged_in = true
       this.user.id = id
       this.user.name = name
       this.user.cookie = cookie
-      api.defaults.headers.common['user_cookie'] = this.user.cookie
     },
     async get_user_strongholds(user_id){
       let resp = await api.get('/strongholds/user?user_id='+user_id,
@@ -60,12 +62,16 @@ export const useBeliefStore = defineStore('belief', {
       return resp.data
     },
     async get_stronghold(id){
-      let resp = await api.get('/strongholds/?id='+id)
+      let resp = await api.get('/strongholds/?id='+id, {withCredentials: true})
       return resp.data
     },
     async get_user_resources(){
       let resp = await api.get('/common/resources/?user_id='+this.user.id)
       this.resources = resp.data
+    },
+    async get_building_types(){
+      let resp = await api.get('/strongholds/building_types')
+      return resp.data
     }
   }
 })
