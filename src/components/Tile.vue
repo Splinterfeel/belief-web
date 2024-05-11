@@ -3,7 +3,9 @@
       <q-img v-if="type" class="filled_tile"
         :src="'/src/assets/'+type.icon_name+'.png'"
         :alt="'/src/assets/'+type.icon_name+'.png'"/>
-      <div v-else-if="queued_task" class="queued_building_tile" ></div>
+      <q-img v-else-if="queued_task" class="queued_building_tile"
+        src="/src/assets/hammer.png"
+        alt="/src/assets/hammer.png"/>
       <div v-else class="empty_tile" ></div>
     </div>
 </template>
