@@ -122,6 +122,7 @@ export default defineComponent({
           if (resp.data.successful == true){
             Notify.create({message: 'Постройка начата', color: 'green'})
             this.get_stronghold( this.selected_stronghold.data.id)
+            store.get_user_resources()
           }
           else {
             Notify.create({message: resp.data.description, color: 'red'})
