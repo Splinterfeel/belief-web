@@ -72,6 +72,10 @@ export const useBeliefStore = defineStore('belief', {
     async get_building_types(){
       let resp = await api.get('/strongholds/building_types')
       return resp.data
+    },
+    async get_building_price(building_type_id, level){
+      let resp = await api.get('/strongholds/price?type='+building_type_id+'&level='+level)
+      return resp.data
     }
   }
 })
