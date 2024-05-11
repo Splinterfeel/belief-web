@@ -27,6 +27,23 @@
               <p>{{ selected_building.level }} уровень</p>
               <p>{{ selected_building.building_type.description }}</p>
               <q-separator />
+
+
+              <span v-if="selected_building.queued_task">
+                <!-- есть постройка и идет улучшение -->
+                <div class="text-h6">Идет улучшение до уровня {{ selected_building.queued_task.level }}</div>
+                <p>Завершение: {{ selected_building.queued_task.scheduled_at }}</p>
+              </span>
+              <span v-if="!selected_building.queued_task&&upgrade_price">
+                <!-- возможно улучшение -->
+                <div class="text-h6">Стоимость улучшения до уровня {{ upgrade_price.level }}</div>
+                <p>Золото: {{ upgrade_price.gold }} ед.</p>
+                <p>Продовольствие: {{ upgrade_price.food }} ед.</p>
+                <p>Сырье: {{ upgrade_price.materials }} ед.</p>
+                <p>Население: {{ upgrade_price.population }} ед.</p>
+                <p>Время постройки: {{ upgrade_price.time }} мин.</p>
+                <q-btn label="Улучшить" color="primary" @click="upgrade_building(selected_building.building_type)" />
+              </span>
             </span>
             <span v-else-if="selected_building.queued_task">
               <!-- есть здание в очереди постройки -->
@@ -52,7 +69,7 @@
                 <p>Население: {{ build_new.price.population }} ед.</p>
                 <p>Время постройки: {{ build_new.price.time }} мин.</p>
                 <q-btn color="primary" label="Построить"
-                    @click="build_new_building(selected_building.cell, build_new.selected_type)" />
+                    @click="build_new_building(build_new.selected_type)" />
               </span>
             </span>
 
@@ -95,6 +112,7 @@ export default defineComponent({
         selected_type: null,
         price: null
       },
+      upgrade_price: null,
     };
   },
   mounted: function(){
@@ -109,8 +127,26 @@ export default defineComponent({
   computed: {
   },
   methods: {
-    build_new_building(cell, type){
-      console.log('building new '+ type.id + ', cell '+ cell)
+    upgrade_building(type){
+      api.post('/strongholds/building', {
+          user_id: store.user.id,
+          stronghold_id: this.selected_stronghold.data.id,
+          building_type_id: type.id,
+          cell: this.selected_building.cell,
+          level: this.selected_building.level + 1,
+          is_upgrade: true
+        }).then((resp)=>{
+          if (resp.data.successful == true){
+            Notify.create({message: 'Улучшение начато', color: 'green'})
+            this.get_stronghold( this.selected_stronghold.data.id)
+            store.get_user_resources()
+          }
+          else {
+            Notify.create({message: resp.data.description, color: 'red'})
+          }
+        })
+    },
+    build_new_building(type){
       api.post('/strongholds/building', {
           user_id: store.user.id,
           stronghold_id: this.selected_stronghold.data.id,
@@ -136,14 +172,22 @@ export default defineComponent({
     },
     tile_click(building){
       this.selected_building = building
-      console.log(building)
+      if (this.selected_building.building_type_id){
+        console.log('query for upgrade price???')
+        this.get_building_price(this.selected_building.building_type_id, this.selected_building.level + 1, true)
+      }
     },
-    get_building_price(type, level){
+    get_building_price(type, level, upgrade=false){
       this.build_new.price = null
+      this.upgrade_price = null
       store.get_building_price(type, level).then((resp)=>{
-        this.build_new.price = resp
+        if (upgrade){
+          this.upgrade_price = resp
+        }
+        else {
+          this.build_new.price = resp
+        }
       })
-      // console.log(this.build_new.selected_type)
     }
   },
 })
